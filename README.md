@@ -32,6 +32,12 @@ example `pip install -r requirements.txt`
 # create .env file, it must be in root of framework
 REDDIT_USERNAME=<user/email>
 REDDIT_PASSWORD=<password>
+APP_USERNAME=<your_Username_for_REDDIT_App> e.g. https://ww.reddit.com/prefs/apps/ (not your email)
+PYTHONPATH=<your_current_work_directory> e.g. /mnt/c/workspace/Playwright_Python
+CLIENT_ID=<your_CLIENT_ID_for_REDDIT_App> e.g. https://ww.reddit.com/prefs/apps/
+CLIENT_SECRET=<your_CLIENT_SECRET_for_REDDIT_App> e.g. https://ww.reddit.com/prefs/apps/
+APP_PASSWORD=<your_APP_PASSWORD_for_REDDIT_App> e.g. https://ww.reddit.com/prefs/apps/
+USER_AGENT=<your USER AGENT>
 
 # check installed dependencies list 
 Run: `pip list`
@@ -46,5 +52,16 @@ Run: `pip list`
 
 # run tests
 (root framework dir) `make <target>`
-example: `make reg_account`
+example: `make test_case1`
 
+trigger test cases by Markers:
+Based on Markers in pytest.ini file.
+Update Makefile, 
+Example before changes:
+    test_case1:
+        pytest src/test_tc1.py -v --capture=no --tb=long --headed
+Example after changes:
+    test_case1: 
+        pytest src/test_tc1.py -m "regression" -v --capture=no --tb=long --headed
+Run:
+`make test_case1`

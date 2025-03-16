@@ -175,3 +175,5 @@ cython_debug/
 
 .env
 venv_linux/
+logs/
+pytest/

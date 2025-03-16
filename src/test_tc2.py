@@ -1,45 +1,51 @@
-import pytest
 import asyncio
-import random
-import string
-from playwright.async_api import async_playwright, expect
-import os
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
-
-# Get credentials
-REDDIT_USERNAME = os.getenv("REDDIT_USERNAME")
-REDDIT_PASSWORD = os.getenv("REDDIT_PASSWORD")
-
-# Function to generate a random email and username
-def generate_random_string(length=8):
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+from playwright.async_api import async_playwright
+import pytest
+import time
+import requests
+import logging
 
 @pytest.mark.asyncio
-async def test_reddit_register():
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False, slow_mo=500)  # Debug mode
-        #browser = await p.firefox.launch(headless=False, slow_mo=500)  # Debug mode
-        context = await browser.new_context()
-        page = await context.new_page()
+async def test_run(launch_logged_in):
+    # Note:
+    # Due to blocking from Reddit, there is Server Error - 500
+    # The browser had been launched with Reddit.com as expected, 
+    # however that is not logged in , even valid token was retrieved.
+    # See CONFTEST.PY with all of FIXTURE like get_token() and launch_logged_in()
 
-        # Navigate to Reddit login page
-        await page.goto("https://www.reddit.com/login/")
+    TEST_CASE = '''
+        Precondition:
+            - Have valid credentials for REDDIT WEB APP DEVELOPERS
+            - Get Valid Token via API (As a Fixture)
+            - Launch required browser (As a Fixture)
+            - Navigate to www.reddit.com as Logged in user
+        Steps:
+            - Select TOP tab from Homepage
+            - Select the first post from the list successfully
+        Cleanup:
+            - Close required browser (depends on yield and scope of the Fixture)
+        '''
+    logging.info(f'TEST CASE LOGGING: \n{TEST_CASE}')
 
-        # Get the login iframe
-        
-        login_frame = page.frame_locator("xpath=//iframe[contains(@id=login, 'https://www.reddit.com/login'])")
-        
+    # Preconditions
+    # Assuming that USER is logged in and see Homepage:
+    # Actually the Browser has been launched with not-logged in User and see Homepage.
+    page = launch_logged_in
 
-        # Fill login form
-        await login_frame.locator("input[name='username']").fill(REDDIT_USERNAME)
-        await login_frame.locator("input[name='password']").fill(REDDIT_PASSWORD)
-        await login_frame.locator("button[type='login']").click()
+    ############ Select TOP tab from Homepage #################    
+    top_tab = page.get_by_role("link", name="top", exact=True)
+    await top_tab.click()
+    
+    ############ Select TOP post #################
+    # The following code is not functional, 
+    # the main issue is first top post locator 
+    logging.info('going to click on top tab')
+    first_post = page.locator('div#siteTable div.thing div.entry div.top-matter p.title a.title')
+    #await expect(first_post).to_be_visible()
+    logging.info('first topic is visable')
+    await first_post.click()
+    logging.info("First post clicked successfully.")
+    await page.wait_for_timeout(3000)
+    
 
 
-
-
-
-        
