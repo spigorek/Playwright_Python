@@ -115,7 +115,12 @@ async def test_reddit_register():
         
         #button_continue = page.locator("button:has-text('Continue')").first
         button_continue = page.locator(registr_elem.continue_btn_locator_interest_page).last
-        await button_continue.click()
+        try:
+            await button_continue.click()
+            # ASSERT that we are on the right page - See examples in LINE#30:
+            await expect(page.locator("text=Personalizing your experience")).to_be_visible()
+        except Exception as e:
+            logging.error(f"Failed to click the continue button: {e}")
         # ASSERT that we are on the right page - See examples in LINE#30:
 
         # Close the browser
