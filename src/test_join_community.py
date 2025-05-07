@@ -15,7 +15,7 @@ load_dotenv()
 class Test_Join_Community:
     def test_join_community(self, login_page: Page): 
         #locator classes initialization
-        login_elem = Login() 
+        login_elem = Login() #
         search_elem = Search_Community()
         community_name = "r/eyebleach"
         
@@ -28,7 +28,7 @@ class Test_Join_Community:
         login_page.locator(login_elem.login_btn_locator).click() # Click the login button
 
         # Search for a community
-        login_page.fill(search_elem.search_field, community_name) # Fill in the search field
+        login_page.fill(search_elem.search_field, community_name) # Fill in the search field 
         login_page.locator(search_elem.search_btn).click() # Click the search button
         community_title_join_btn = login_page.locator(search_elem.EyeBleach_btn) # Get the community title locator
         

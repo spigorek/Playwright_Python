@@ -19,8 +19,8 @@ async def test_reddit_register():
         # SETUP - Browser selection can be done via CLI / Makefile
         # browser = await p.chromium.launch(headless=False, slow_mo=500)  # Debug mode for Chromium
         browser = await p.firefox.launch(headless=False, slow_mo=500)  # Debug mode for Firefox
-        context = await browser.new_context()
-        page = await context.new_page()
+        context = await browser.new_context() 
+        page = await context.new_page() 
 
         # Navigate to Reddit sign-up page
         register_url = os.path.join(BASEURL, EP_REGISTER)
@@ -28,9 +28,9 @@ async def test_reddit_register():
 
         ############### Sign Up page ####################
         logging.info(f"We are on {SIGN_UP_PAGE} page")
-        h1_sign_up_label = page.locator('h1').first
-        await expect(h1_sign_up_label).to_be_visible()
-        h1_sign_up_label_text = await h1_sign_up_label.text_content()
+        h1_sign_up_label = page.locator('h1').first # h1 label on Sign Up page
+        await expect(h1_sign_up_label).to_be_visible() # Verify the h1 label is visible
+        h1_sign_up_label_text = await h1_sign_up_label.text_content() # Get the text of the h1 label
         logging.info(f'h1_sign_up_label_text: {h1_sign_up_label_text.strip()}')
         assert h1_sign_up_label_text.strip() == SIGN_UP_PAGE , f"{SIGN_UP_PAGE} page does NOT shown up" 
 
@@ -62,7 +62,7 @@ async def test_reddit_register():
         await page.get_by_role("button", name=registr_elem.skip_btn_name_about_you_page).click() # click Skip button on About your page
 
         ############### INTERESTS PAGE ####################
-        logging.info(f"We are on {INTERESTS_PAGE} page")
+        logging.debug(f"We are on {INTERESTS_PAGE} page")
         first_topic_tag = page.locator(registr_elem.first_interest_locator_interests_page) # Choose THE FIRST INTEREST element from the list
         await first_topic_tag.click() # Click the first interest element
         
